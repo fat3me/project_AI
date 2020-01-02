@@ -17,6 +17,9 @@ class Player:
     def get_name(self):
         return self.name
 
+    def number_of_lands(self):
+        return len(self.landList)
+
 
 
 

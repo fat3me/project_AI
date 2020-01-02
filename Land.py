@@ -10,8 +10,8 @@ class Land:
         self.adjacencylist = []
         self.soldiersCount = 1
 
-    def add_soldier(self):
-        self.soldiersCount += 1
+    def add_soldier(self, num):
+        self.soldiersCount += num
 
     def set_color(self, color):
         self.color = color
@@ -19,26 +19,33 @@ class Land:
     def set_id(self, idOwner):
         self.owner = idOwner
 
-    def attack(self, defender):
+    def attack(self, defender, soldiers_used, attacking_player, defender_player):
         if self.adjacencylist.__contains__(defender):
-            while self.soldiersCount > 1 and defender.soldiersCount > 0:
+
+            while soldiers_used > 1 and defender.soldiersCount > 0:
                 attacker_dice = int(random.randint(1, 6))
                 print("attacker_dice : ", attacker_dice)
                 defender_dice = int(random.randint(1, 6))
                 print("defender dice : ", defender_dice)
                 if attacker_dice > defender_dice:
                     defender.soldiersCount -= 1
+                    defender_player.soldiers -= 1
                 else:
                     self.soldiersCount -= 1
+                    attacking_player.soldiers -= 1
+                    soldiers_used -= 1
         else:
             print("you can NOT attack this land !! ")
 
         if defender.soldiersCount == 0:
             print("player", self.owner, "captured land from player", defender.owner)
+            defender_player.landList.remove(defender)
             defender.owner = self.owner
             defender.color = self.color
-            defender.soldiersCount = self.soldiersCount - 1
+            defender.soldiersCount = soldiers_used - 1
             self.soldiersCount = 1
+            attacking_player.landList.append(defender)
+
         else:
             print("Oops player", self.owner, " couldn't capture the land from player", defender.owner)
 
