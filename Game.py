@@ -2,13 +2,12 @@ def game(n, m, players, lands):
     global y
     end = False
     while not end:
-        for i in range(n):
-            print()
-            for j in range(m):
-                print(lands[i][j].owner, end=" ")
-        print()
         for x in players:
-
+            for i in range(n):
+                print()
+                for j in range(m):
+                    print(lands[i][j].owner, end=" ")
+            print()
             print(x.name, "its your turn !")
             if x.number_of_lands() == 0:
                 print(x.name, "you loose ")
@@ -92,6 +91,9 @@ def game(n, m, players, lands):
                                         land_with_most_friends_count = friends
                                         defender_land = enemy_land
                                         attacker_land = land
+                                        can_attack_ai = True
+                        else:
+                            can_attack_ai = False
                     global defender_player
                     for defender_player in players:
                         if defender_player.id == defender_land.owner:
@@ -99,12 +101,7 @@ def game(n, m, players, lands):
                     if attacker_land.soldiersCount - defender_land.soldiersCount > 3:
                         attacker_land.attack(defender_land, attacker_land.soldiersCount, x, defender_player)
 
-                    for j in range(len(x.landList)):
-                        if x.landList[j].soldiersCount > 1:
-                            can_attack_ai = True
-                            break
-                        else:
-                            can_attack_ai = False
+
 
             if x.number_of_lands() == n * m:
                 end = True

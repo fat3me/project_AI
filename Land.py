@@ -38,7 +38,7 @@ class Land:
             print("you can NOT attack this land !! ")
 
         if defender.soldiersCount == 0:
-            print("player", self.owner, "captured land from player", defender.owner)
+            print("player", self.owner, "captured land", defender.i, defender.j, "from player", defender.owner)
             defender_player.landList.remove(defender)
             defender.owner = self.owner
             defender.color = self.color
