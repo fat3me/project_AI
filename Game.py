@@ -8,11 +8,11 @@ def game(n, m, players, lands):
                 for j in range(m):
                     print(lands[i][j].owner, end=" ")
             print()
-            print(x.name, "its your turn !")
             if x.number_of_lands() == 0:
                 print(x.name, "you loose ")
                 players.remove(x)
                 continue
+            print(x.name, "its your turn !")
 
             if not x.isAI:
                 print("lets increase your troops")
@@ -29,30 +29,32 @@ def game(n, m, players, lands):
                         print("its not your land")
 
                 want_attack = input("Enter YES for attack and Enter NO for no attacking: ")
-                if want_attack == "YES":
-                    can_attack = True
-                    while number_of_xlands < n * m and can_attack:
-                        at_i = int(input("Enter i attacker land: "))
-                        at_j = int(input("Enter j attacker land: "))
-                        de_i = int(input("Enter i defender land: "))
-                        de_j = int(input("Enter j defender land: "))
-                        soldier_used = int(input("Enter number of soldiers: "))
-                        if soldier_used > lands[at_i][at_j].soldiersCount:
-                            print("there are not that many troops in this land")
-                            continue
-                        for y in players:
-                            if y.id == lands[de_i][de_j].owner:
-                                break
-                        lands[at_i][at_j].attack(lands[de_i][de_j], soldier_used, x, y)
-                        for i in range(len(x.landList)):
-                            if x.landList[i].soldiersCount != 1:
-                                can_attack = True
-                                break
-                            else:
-                                can_attack = False
-                        want_attack = input("Enter YES for attack and Enter NO for no attacking: ")
-                        if want_attack == "NO":
+                can_attack = True
+                if want_attack == "NO" or want_attack == "no":
+                    can_attack = False
+                while number_of_xlands < n * m and can_attack:
+                    at_i = int(input("Enter i attacker land: "))
+                    at_j = int(input("Enter j attacker land: "))
+                    print("number of soldiers on this land : ", lands[at_i][at_j].soldiersCount)
+                    de_i = int(input("Enter i defender land: "))
+                    de_j = int(input("Enter j defender land: "))
+                    soldier_used = int(input("Enter number of soldiers you want to use: "))
+                    if soldier_used > lands[at_i][at_j].soldiersCount:
+                        print("there are not that many troops in this land")
+                        continue
+                    for y in players:
+                        if y.id == lands[de_i][de_j].owner:
+                            break
+                    lands[at_i][at_j].attack(lands[de_i][de_j], soldier_used, x, y)
+                    for i in range(len(x.landList)):
+                        if x.landList[i].soldiersCount > 1:
+                            can_attack = True
+                            break
+                        else:
                             can_attack = False
+                    want_attack = input("Enter YES for attack and Enter NO for no attacking: ")
+                    if want_attack == "NO" or want_attack == "no":
+                        can_attack = False
 
             elif x.isAI:
                 lands_with_least_enemy = []
@@ -75,7 +77,8 @@ def game(n, m, players, lands):
                     print("troops add in land ", troops.i, troops.j)
 
                 can_attack_ai = True
-                while can_attack_ai:
+                dont_attack = False
+                while can_attack_ai and not dont_attack:
                     land_with_most_friends_count = 0
                     global defender_land, attacker_land, defender
                     for land in x.landList:
@@ -91,17 +94,26 @@ def game(n, m, players, lands):
                                         land_with_most_friends_count = friends
                                         defender_land = enemy_land
                                         attacker_land = land
-                                        can_attack_ai = True
-                        else:
-                            can_attack_ai = False
+
                     global defender_player
                     for defender_player in players:
-                        if defender_player.id == defender_land.owner:
+                        try:
+                            if defender_player.id == defender_land.owner:
+                                break
+                        except:
+                            dont_attack = True
                             break
                     if attacker_land.soldiersCount - defender_land.soldiersCount > 3:
                         attacker_land.attack(defender_land, attacker_land.soldiersCount, x, defender_player)
-
-
+                    else:
+                        dont_attack = True
+                    for i in range(len(x.landList)):
+                        if x.landList[i].soldiersCount > 1:
+                            can_attack_ai = True
+                            break
+                        else:
+                            can_attack_ai = False
 
             if x.number_of_lands() == n * m:
+                print(x.name, "you win!")
                 end = True
