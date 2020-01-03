@@ -19,8 +19,10 @@ if __name__ == '__main__':
     players = []
     lands = [[Land(i, j) for j in range(n)] for i in range(m)]
     global i
+    i = 0
     for i in range(physicalPlayerCount):
         players.append(Player(input("player " + str(i) + " please enter your name: "), False, colors[i], i))
+
 
     for j in range(artificialPlayerCount):
         players.append(Player("player " + str(j + i + 1), True, colors[j + i + 1], j + i + 1))

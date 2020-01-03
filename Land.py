@@ -9,6 +9,7 @@ class Land:
         self.owner = -1
         self.adjacencylist = []
         self.soldiersCount = 1
+        self.value = 0
 
     def add_soldier(self, num):
         self.soldiersCount += num

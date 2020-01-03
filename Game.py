@@ -1,3 +1,6 @@
+import time
+
+
 def game(n, m, players, lands):
     global y
     end = False
@@ -57,24 +60,25 @@ def game(n, m, players, lands):
                         can_attack = False
 
             elif x.isAI:
-                lands_with_least_enemy = []
-                enemy_land_count = 8
-                for land in x.landList:
-                    cnt = 0
-                    for enemy_land in land.adjacencylist:
-                        if enemy_land.owner != land.owner:
-                            cnt += 1
-                    if cnt < enemy_land_count:
-                        enemy_land_count = cnt
-                        lands_with_least_enemy.clear()
-                        lands_with_least_enemy.append(land)
-                    elif cnt == enemy_land_count:
-                        lands_with_least_enemy.append(land)
-
-                for troops in lands_with_least_enemy:
-                    tmp = int(x.number_of_lands() / len(lands_with_least_enemy))
-                    troops.add_soldier(tmp)
-                    print("troops add in land ", troops.i, troops.j)
+                x.make_move(lands, n, m)
+                # lands_with_least_enemy = []
+                # enemy_land_count = 8
+                # for land in x.landList:
+                #     cnt = 0
+                #     for enemy_land in land.adjacencylist:
+                #         if enemy_land.owner != land.owner:
+                #             cnt += 1
+                #     if cnt < enemy_land_count:
+                #         enemy_land_count = cnt
+                #         lands_with_least_enemy.clear()
+                #         lands_with_least_enemy.append(land)
+                #     elif cnt == enemy_land_count:
+                #         lands_with_least_enemy.append(land)
+                #
+                # for troops in lands_with_least_enemy:
+                #     tmp = int(x.number_of_lands() / len(lands_with_least_enemy))
+                #     troops.add_soldier(tmp)
+                #     print("troops added in land ", troops.i, troops.j)
 
                 can_attack_ai = True
                 dont_attack = False
@@ -117,3 +121,5 @@ def game(n, m, players, lands):
             if x.number_of_lands() == n * m:
                 print(x.name, "you win!")
                 end = True
+
+        # time.sleep(0.5)
