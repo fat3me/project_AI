@@ -31,6 +31,8 @@ class Land:
                 if attacker_dice > defender_dice:
                     defender.soldiersCount -= 1
                     defender_player.soldiers -= 1
+                elif attacker_dice == defender_dice:
+                    print("dices were equal, ROLL AGAIN!!")
                 else:
                     self.soldiersCount -= 1
                     attacking_player.soldiers -= 1

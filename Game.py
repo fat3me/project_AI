@@ -9,7 +9,7 @@ def game(n, m, players, lands):
             for i in range(n):
                 print()
                 for j in range(m):
-                    print(lands[i][j].owner, end=" ")
+                    print(lands[i][j].owner, "(", lands[i][j].soldiersCount, ")", end=" ")
             print()
             if x.number_of_lands() == 0:
                 print(x.name, "you loose ")
@@ -85,6 +85,7 @@ def game(n, m, players, lands):
                 while can_attack_ai and not dont_attack:
                     land_with_most_friends_count = 0
                     global defender_land, attacker_land, defender
+                    attacker_land = x.landList[0]
                     for land in x.landList:
                         if land.soldiersCount > 1:
                             for enemy_land in land.adjacencylist:
