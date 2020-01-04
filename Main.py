@@ -35,6 +35,7 @@ if __name__ == '__main__':
     filling_matrix(n, m, numberOfPlayers, players, lands)
     filling_adjacency_lists(n, m, lands)
     game(n, m, players, lands)
+
     print('\x1b[6;30;42m' + 'Success!' + '\x1b[0m')
 
 
