@@ -1,4 +1,5 @@
 import time
+from Colors import *
 
 
 def game(n, m, players, lands):
@@ -9,10 +10,14 @@ def game(n, m, players, lands):
             for i in range(n):
                 print()
                 for j in range(m):
-                    print(lands[i][j].owner, "(", lands[i][j].soldiersCount, ")", end=" ")
+                    print(lands[i][j].color, CBOLD, lands[i][j].owner, CEND, CGREY, "(", lands[i][j].soldiersCount, ")", CEND, end=" ")
             print()
+            if x.number_of_lands() == n * m:
+                print(CGREEN, x.name, "you win!", CEND)
+                end = True
+                break
             if x.number_of_lands() == 0:
-                print(x.name, "you loose ")
+                print(CRED2, x.name, "you loose ", CEND)
                 players.remove(x)
                 continue
             print(x.name, "its your turn !")
@@ -119,8 +124,6 @@ def game(n, m, players, lands):
                         else:
                             can_attack_ai = False
 
-            if x.number_of_lands() == n * m:
-                print(x.name, "you win!")
-                end = True
+
 
         # time.sleep(0.5)
