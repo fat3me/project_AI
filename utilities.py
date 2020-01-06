@@ -21,35 +21,20 @@ def filling_matrix(n, m, numberOfPlayers, players, lands):
 def filling_adjacency_lists(n, m, lands):
     for i in range(n):
         for j in range(m):
-            try:
+            if j-1 >= 0:
                 lands[i][j].adjacencylist.append(lands[i][j - 1])
-            except:
-                pass
-            try:
+            if j+1 < m:
                 lands[i][j].adjacencylist.append(lands[i][j + 1])
-            except:
-                pass
-            try:
+            if i+1< n:
                 lands[i][j].adjacencylist.append(lands[i + 1][j])
-            except:
-                pass
-            try:
+            if i-1 >= 0:
                 lands[i][j].adjacencylist.append(lands[i - 1][j])
-            except:
-                pass
-            try:
+            if i+1< n and j-1 >= 0:
                 lands[i][j].adjacencylist.append(lands[i + 1][j - 1])
-            except:
-                pass
-            try:
+            if i + 1 < n and j + 1 < m:
                 lands[i][j].adjacencylist.append(lands[i + 1][j + 1])
-            except:
-                pass
-            try:
+            if i-1 >= 0 and j + 1 < m:
                 lands[i][j].adjacencylist.append(lands[i - 1][j + 1])
-            except:
-                pass
-            try:
+            if i - 1 >= 0 and j-1 >= 0:
                 lands[i][j].adjacencylist.append(lands[i - 1][j - 1])
-            except:
-                continue
+

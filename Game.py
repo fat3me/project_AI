@@ -43,11 +43,11 @@ def game(n, m, players, lands):
                 while number_of_xlands < n * m and can_attack:
                     at_i = int(input("Enter i attacker land: "))
                     at_j = int(input("Enter j attacker land: "))
-                    print("number of soldiers on this land : ", lands[at_i][at_j].soldiersCount)
+                    print("number of available soldiers on this land : ", lands[at_i][at_j].soldiersCount-1)
                     de_i = int(input("Enter i defender land: "))
                     de_j = int(input("Enter j defender land: "))
                     soldier_used = int(input("Enter number of soldiers you want to use: "))
-                    if soldier_used > lands[at_i][at_j].soldiersCount:
+                    if soldier_used > lands[at_i][at_j].soldiersCount-1:
                         print("there are not that many troops in this land")
                         continue
                     for y in players:
@@ -65,7 +65,7 @@ def game(n, m, players, lands):
                         can_attack = False
 
             elif x.isAI:
-                x.make_move(lands, n, m)
+                x.make_move(lands, n, m, players)
                 # lands_with_least_enemy = []
                 # enemy_land_count = 8
                 # for land in x.landList:
@@ -87,42 +87,42 @@ def game(n, m, players, lands):
 
                 can_attack_ai = True
                 dont_attack = False
-                while can_attack_ai and not dont_attack:
-                    land_with_most_friends_count = 0
-                    global defender_land, attacker_land, defender
-                    attacker_land = x.landList[0]
-                    for land in x.landList:
-                        if land.soldiersCount > 1:
-                            for enemy_land in land.adjacencylist:
-                                if enemy_land.owner != land.owner:
-                                    friends = 0
-                                    for enemy_land_adj in enemy_land.adjacencylist:
-                                        if enemy_land_adj.owner == land.owner:
-                                            friends += 1
-
-                                    if friends > land_with_most_friends_count:
-                                        land_with_most_friends_count = friends
-                                        defender_land = enemy_land
-                                        attacker_land = land
-
-                    global defender_player
-                    for defender_player in players:
-                        try:
-                            if defender_player.id == defender_land.owner:
-                                break
-                        except:
-                            dont_attack = True
-                            break
-                    if attacker_land.soldiersCount - defender_land.soldiersCount > 3:
-                        attacker_land.attack(defender_land, attacker_land.soldiersCount, x, defender_player)
-                    else:
-                        dont_attack = True
-                    for i in range(len(x.landList)):
-                        if x.landList[i].soldiersCount > 1:
-                            can_attack_ai = True
-                            break
-                        else:
-                            can_attack_ai = False
+                # while can_attack_ai and not dont_attack:
+                #     land_with_most_friends_count = 0
+                #     global defender_land, attacker_land, defender
+                #     attacker_land = x.landList[0]
+                #     for land in x.landList:
+                #         if land.soldiersCount > 1:
+                #             for enemy_land in land.adjacencylist:
+                #                 if enemy_land.owner != land.owner:
+                #                     friends = 0
+                #                     for enemy_land_adj in enemy_land.adjacencylist:
+                #                         if enemy_land_adj.owner == land.owner:
+                #                             friends += 1
+                #
+                #                     if friends > land_with_most_friends_count:
+                #                         land_with_most_friends_count = friends
+                #                         defender_land = enemy_land
+                #                         attacker_land = land
+                #
+                #     global defender_player
+                #     for defender_player in players:
+                #         try:
+                #             if defender_player.id == defender_land.owner:
+                #                 break
+                #         except:
+                #             dont_attack = True
+                #             break
+                #     if attacker_land.soldiersCount - defender_land.soldiersCount > 3:
+                #         attacker_land.attack(defender_land, attacker_land.soldiersCount-1, x, defender_player)
+                #     else:
+                #         dont_attack = True
+                #     for i in range(len(x.landList)):
+                #         if x.landList[i].soldiersCount > 1:
+                #             can_attack_ai = True
+                #             break
+                #         else:
+                #             can_attack_ai = False
 
 
 
