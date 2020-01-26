@@ -48,9 +48,11 @@ class Land:
                 defender.soldiersCount = soldiers_used
                 self.soldiersCount = self.soldiersCount - soldiers_used
                 attacking_player.landList.append(defender)
-
+                return True
             else:
                 print("Oops player", self.owner, " couldn't capture the land from player", defender.owner)
+                return False
         else:
             print("you can NOT attack land in: ", defender.i, defender.j, " from: ", self.i, self.j, "!! ")
+            return False
 
