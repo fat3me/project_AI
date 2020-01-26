@@ -25,16 +25,12 @@ class Player:
     def number_of_lands(self):
         return len(self.landList)
 
-
     def a_star_deploy(self, game_map, n, m):
         available_soldiers = self.number_of_lands()
-
 
     # def a_star_attack(self, players):
     #     for land in self.landList:
     #         if land.soldiersCount>1:
-
-
 
     # def find_best_option(self, player, land, given_soldiers):
     #     route = []
@@ -49,8 +45,6 @@ class Player:
 
         if node.player.id is main_player.id:
             value = int('-inf')
-
-
 
     def min_max(self, players, cnt, node, n, m):
         if cnt == 5 * len(players):
@@ -117,69 +111,100 @@ class Player:
                 if land.soldiersCount > 1:
                     ready_for_attack.append(land)
 
-    def make_move(self, state, n, m, current_player, players):
+    def make_move(self, state, n, m, current_player, players, turn):
         # evaluation of all nodes
         # DEPLOY
-        for i in range(self.number_of_lands()):
-            current_player.valuation(n, m, state, players)
-            current_player.landList.sort(key=lambda x: x.value + x.vulnerability, reverse=True)
-            current_player.landList[0].add_soldier(1)
-            print("adding soldier to ", current_player.landList[0].i, current_player.landList[0].j, "with value of: ",
-                  current_player.landList[0].value, "and vulnerability of:", current_player.landList[0].vulnerability)
+        if turn != 1:
+            for i in range(self.number_of_lands()):
+                current_player.valuation(n, m, state, players)
+                current_player.landList.sort(key=lambda x: x.value + x.vulnerability, reverse=True)
+                current_player.landList[0].add_soldier(1)
+                # print("adding soldier to ", current_player.landList[0].i, current_player.landList[0].j, "with value of: ",
+                #       current_player.landList[0].value, "and vulnerability of:", current_player.landList[0].vulnerability)
         # if is_first_turn:
         #     return
         # ATTACK
-        ready_for_attack = []
-        for land in current_player.landList:
-            if land.soldiersCount > 1:
-                ready_for_attack.append(land)
-
-        for attacker in ready_for_attack:
-            enemies = []
-            for land in attacker.adjacencylist:
-                if not land.owner == attacker.owner:
-                    enemies.append(land)
-            enemies.sort(key=lambda x: x.soldiersCount, reverse=False)
-            if len(enemies) == 0:
-                break
-            enemy_cnt = len(enemies)
-            for enemy in enemies:
-                if attacker.soldiersCount > enemy.soldiersCount:
-                    needed_soldiers = min(enemy.soldiersCount + 3,
-                                          int(enemy.soldiersCount + enemy.soldiersCount / 2) + 1)
-                    if enemy.soldiersCount == 1:
-                        if attacker.soldiersCount >= 3:
-                            needed_soldiers = 3
-                    if attacker.soldiersCount - needed_soldiers - 1 <= 0:
+        if turn != 0:
+            ready_for_attack = []
+            for land in current_player.landList:
+                if land.soldiersCount > 1:
+                    ready_for_attack.append(land)
+            is_attack_possible = True
+            while len(ready_for_attack) > 0 and is_attack_possible:
+                is_attack_possible = False
+                for attacker in ready_for_attack:
+                    enemies = []
+                    for land in attacker.adjacencylist:
+                        if not land.owner == attacker.owner:
+                            enemies.append(land)
+                    enemies.sort(key=lambda x: x.soldiersCount, reverse=False)
+                    if len(enemies) == 0:
                         break
+                    enemy_cnt = len(enemies)
+                    for enemy in enemies:
+                        if attacker.soldiersCount > enemy.soldiersCount:
+                            needed_soldiers = min(enemy.soldiersCount + 3,
+                                                  int(enemy.soldiersCount + enemy.soldiersCount / 2) + 1)
+                            if enemy.soldiersCount == 1:
+                                needed_soldiers = 2
+                            global enemy_player
+                            for p in players:
+                                if p.id == enemy.owner:
+                                    enemy_player = p
+                            if attacker.soldiersCount - needed_soldiers - 1 <= 0:
+                                total_soldiers = 0
+                                for land in enemy.adjacencylist:
+                                    if land.owner == attacker.owner:
+                                        total_soldiers += land.soldiersCount - 1
+                                if total_soldiers > enemy.soldiersCount + 2:
+                                    is_attack_possible = True
+                                    attacker.attack(enemy, attacker.soldiersCount - 1, current_player, enemy_player)
+                                break
+                            is_attack_possible = True
+                            if enemy_cnt == 1:
+                                needed_soldiers = attacker.soldiersCount - 1
 
-                    if enemy_cnt == 1:
-                        needed_soldiers = attacker.soldiersCount - 1
-                    global enemy_player
-                    for p in players:
-                        if p.id == enemy.owner:
-                            enemy_player = p
-                    print("attacking from:", attacker.i, attacker.j, "  to:", enemy.i, enemy.j, "with", needed_soldiers,
-                          "soldiers")
-                    print("------> enemy:", enemy.soldiersCount, "soldiers")
-                    res = attacker.attack(enemy, needed_soldiers, current_player, enemy_player)
-                    if res:
-                        enemy_cnt -= 1
-                    elif attacker.soldiersCount-1 > enemy.soldiersCount:
-                        res = attacker.attack(enemy, attacker.soldiersCount-1, current_player, enemy_player)
-                        if res:
-                            enemy_cnt -= 1
-        # current_player.landList.sort(key=lambda x: x.value, reverse=True)
-        # cnt = 0
-        # max_val = current_player.landList[0].value
-        # for land in current_player.landList:
-        #     if land.value < max_val:
-        #         break
-        #     cnt += 1
-        # for i in range(cnt):
-        #     current_player.landList[i].add_soldier(int(current_player.number_of_lands() / cnt))
-        #     print("troops added in land ", current_player.landList[i].i, current_player.landList[i].j)
-        # current_player.landList[i].add_soldier(int(current_player.number_of_lands() % cnt))
+                            print("attacking from:", attacker.i, attacker.j, "  to:", enemy.i, enemy.j, "with", needed_soldiers,
+                                  "soldiers")
+                            print("------> enemy:", enemy.soldiersCount, "soldiers")
+                            res = attacker.attack(enemy, needed_soldiers, current_player, enemy_player)
+                            if res:
+                                enemy_cnt -= 1
+                            elif attacker.soldiersCount - 1 > enemy.soldiersCount:
+                                res = attacker.attack(enemy, attacker.soldiersCount - 1, current_player, enemy_player)
+                                if res:
+                                    enemy_cnt -= 1
+                        else:
+                            total_soldiers = 0
+                            for land in enemy.adjacencylist:
+                                if land.owner == attacker.owner:
+                                    total_soldiers += land.soldiersCount - 1
+                            global enemy_player2
+                            for p in players:
+                                if p.id == enemy.owner:
+                                    enemy_player2 = p
+                            if total_soldiers > enemy.soldiersCount + 2:
+                                is_attack_possible = True
+                                attacker.attack(enemy, attacker.soldiersCount - 1, current_player, enemy_player2)
+
+                ready_for_attack = []
+                for land in current_player.landList:
+                    if land.soldiersCount > 1:
+                        ready_for_attack.append(land)
+
+            # current_player.landList.sort(key=lambda x: x.value, reverse=True)
+            # cnt = 0
+            # max_val = current_player.landList[0].value
+            # for land in current_player.landList:
+            #     if land.value < max_val:
+            #         break
+            #     cnt += 1
+            # for i in range(cnt):
+            #     current_player.landList[i].add_soldier(int(current_player.number_of_lands() / cnt))
+            #     print("troops added in land ", current_player.landList[i].i, current_player.landList[i].j)
+            # current_player.landList[i].add_soldier(int(current_player.number_of_lands() % cnt))
+
+
 
     def valuation(self, n, m, state, players):
         for i in range(n):
@@ -275,7 +300,7 @@ class Player:
                     10 * land.soldiersCount) - stocked_soldiers_value
 
             if friendly_adjacent_lands == len(land.adjacencylist):
-                value = -1
+                value = 0
 
         # else:
         #     if enemy_adjacent_stocked_lands > 0:

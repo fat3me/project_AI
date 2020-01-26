@@ -26,9 +26,9 @@ class Land:
 
             while self.soldiersCount > 1 and defender.soldiersCount > 0 and soldiers_used > 0:
                 attacker_dice = int(random.randint(1, 6))
-                print("attacker_dice : ", attacker_dice)
+                # print("attacker_dice : ", attacker_dice)
                 defender_dice = int(random.randint(1, 6))
-                print("defender dice : ", defender_dice)
+                # print("defender dice : ", defender_dice)
                 if attacker_dice > defender_dice:
                     defender.soldiersCount -= 1
                     defender_player.soldiers -= 1

@@ -73,7 +73,7 @@ def game(n, m, players, lands):
                         if want_attack == "NO" or want_attack == "no":
                             can_attack = False
             elif x.isAI:
-                x.make_move(lands, n, m, x, players)
+                x.make_move(lands, n, m, x, players, turn_counter)
                 # lands_with_least_enemy = []
                 # enemy_land_count = 8
                 # for land in x.landList:
